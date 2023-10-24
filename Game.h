@@ -68,6 +68,7 @@ private:
     // position to draw the image
     vector2 m_screenPos;
     vector2 m_origin;
+    RECT m_tileRect;
     // dealing with alpha blending
     std::unique_ptr<DirectX::CommonStates> m_states;
 };

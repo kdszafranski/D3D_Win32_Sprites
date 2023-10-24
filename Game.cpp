@@ -79,15 +79,18 @@ void Game::Render()
 
     // TODO: Add your rendering code here.
     float time = float(m_timer.GetTotalSeconds());
-    m_spriteBatch->Begin();
+
+    // tile the image
+    m_spriteBatch->Begin(SpriteSortMode_Deferred, nullptr, m_states->LinearWrap());
+
     m_spriteBatch->Draw(
-        m_texture.Get(), 
+        m_texture.Get(),
         m_screenPos, // screen position
-        nullptr,     // source rectangle  
-        Colors::Green, 
+        &m_tileRect,     // source rectangle  
+        Colors::Green,
         0.f, //cosf(time),        // rotation
-        m_origin,
-        cosf(time) + 2.f);  // scale
+        m_origin);
+        //cosf(time) + 2.f);  // scale
     m_spriteBatch->End();
 
     m_deviceResources->PIXEndEvent();
@@ -196,8 +199,13 @@ void Game::CreateDeviceDependentResources()
     CD3D11_TEXTURE2D_DESC catDesc;
     cat->GetDesc(&catDesc);
 
-    m_origin.x = float(catDesc.Width / 2);
-    m_origin.y = float(catDesc.Height / 2);
+    m_origin.x = float(catDesc.Width * 2);
+    m_origin.y = float(catDesc.Height * 2);
+    // tiling
+    m_tileRect.left = catDesc.Width * 2;
+    m_tileRect.right = catDesc.Width * 6;
+    m_tileRect.top = catDesc.Height * 2;
+    m_tileRect.bottom = catDesc.Height * 6;
 
     m_states = std::make_unique<CommonStates>(device);
 
