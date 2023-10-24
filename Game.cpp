@@ -87,7 +87,7 @@ void Game::Render()
         m_texture.Get(),
         m_screenPos, // screen position
         &m_tileRect,     // source rectangle  
-        Colors::Green,
+        Colors::White,
         0.f, //cosf(time),        // rotation
         m_origin);
         //cosf(time) + 2.f);  // scale
