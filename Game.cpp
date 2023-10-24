@@ -78,13 +78,21 @@ void Game::Render()
     auto context = m_deviceResources->GetD3DDeviceContext();
 
     // TODO: Add your rendering code here.
+    float time = float(m_timer.GetTotalSeconds());
     m_spriteBatch->Begin();
-    m_spriteBatch->Draw(m_texture.Get(), m_screenPos, nullptr, Colors::White, 0.f, m_origin);
+    m_spriteBatch->Draw(
+        m_texture.Get(), 
+        m_screenPos, // screen position
+        nullptr,     // source rectangle  
+        Colors::Green, 
+        0.f, //cosf(time),        // rotation
+        m_origin,
+        cosf(time) + 2.f);  // scale
     m_spriteBatch->End();
 
     m_deviceResources->PIXEndEvent();
 
-    // Show the new frame.
+    // Show the new frame..
     m_deviceResources->Present();
 }
 
