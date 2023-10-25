@@ -81,12 +81,14 @@ void Game::Render()
     float time = float(m_timer.GetTotalSeconds());
 
     // tile the image
-    m_spriteBatch->Begin(SpriteSortMode_Deferred, nullptr, m_states->LinearWrap());
+    m_spriteBatch->Begin();
+
+    m_spriteBatch->Draw(m_background.Get(), m_fullscreenRect);
 
     m_spriteBatch->Draw(
         m_texture.Get(),
         m_screenPos, // screen position
-        &m_tileRect,     // source rectangle  
+        nullptr,     // source rectangle  
         Colors::White,
         0.f, //cosf(time),        // rotation
         m_origin);
@@ -192,6 +194,11 @@ void Game::CreateDeviceDependentResources()
             m_texture.ReleaseAndGetAddressOf())
     );
 
+    DX::ThrowIfFailed(
+        CreateWICTextureFromFile(device, L"sunset.jpg", nullptr,
+            m_background.ReleaseAndGetAddressOf())
+    );
+
     ComPtr<ID3D11Texture2D> cat;
     DX::ThrowIfFailed(resource.As(&cat));
 
@@ -199,8 +206,8 @@ void Game::CreateDeviceDependentResources()
     CD3D11_TEXTURE2D_DESC catDesc;
     cat->GetDesc(&catDesc);
 
-    m_origin.x = float(catDesc.Width * 2);
-    m_origin.y = float(catDesc.Height * 2);
+    m_origin.x = float(catDesc.Width / 2);
+    m_origin.y = float(catDesc.Height / 2);
     // tiling
     m_tileRect.left = catDesc.Width * 2;
     m_tileRect.right = catDesc.Width * 6;
@@ -218,6 +225,8 @@ void Game::CreateWindowSizeDependentResources()
     auto size = m_deviceResources->GetOutputSize();
     m_screenPos.x = float(size.right) / 2.f;
     m_screenPos.y = float(size.bottom) / 2.f;
+
+    m_fullscreenRect = m_deviceResources->GetOutputSize();
 }
 
 void Game::OnDeviceLost()
@@ -226,6 +235,7 @@ void Game::OnDeviceLost()
     m_texture.Reset();
     m_spriteBatch.reset();
     m_states.reset();
+    m_background.Reset();
 }
 
 void Game::OnDeviceRestored()

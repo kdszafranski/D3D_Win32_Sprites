@@ -65,10 +65,14 @@ private:
     // our lovely cat image
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
     std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
-    // position to draw the image
+    // position to draw the cat image
     vector2 m_screenPos;
     vector2 m_origin;
     RECT m_tileRect;
-    // dealing with alpha blending
+
+    RECT m_fullscreenRect;
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_background;
+
+    // holds various common states/modes
     std::unique_ptr<DirectX::CommonStates> m_states;
 };
